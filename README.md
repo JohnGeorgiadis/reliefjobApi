@@ -15,3 +15,10 @@ https://console.firebase.google.com/u/0/project/reliefjobs-dev/overview
    2. If you want to run pub subs cloud functions use `npm run shell` or `yarn shell` BE CAREFUL this is **production code**
 
 Trello boards with open issues: https://trello.com/b/ZJU9PaUl/graphql-reliefweb
+
+
+### Creating custom tokens
+The environment variable GOOGLE_APPLICATION_CREDENTIALS should be set to 
+the path of the file having the firebase initialization config.
+Without it, it is not possible to create tokens.
+TODO: find a way to automatically load this env variable via the secrets where the config file will be hold.

@@ -8,8 +8,12 @@
     "strict": true,
     "esModuleInterop": true,
     "target": "es2017",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@appRoot/*": ["./src/*"]
+    }
   },
   "compileOnSave": true,
-  "include": ["src"]
+  "include": ["src", "src/typings/custom.d.ts"]
 }

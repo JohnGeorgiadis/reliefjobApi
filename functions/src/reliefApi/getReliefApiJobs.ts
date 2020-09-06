@@ -52,6 +52,10 @@ const normalizeData = (originalData: ReliefApiData) => {
         console.log(e);
     }
 
+    // Convert date from API to a firebase timestamp
+    const formattedDate = {changed: new Date(result.date.closing) , closing: new Date(result.date.closing), created: new Date(result.date.created)};
+    result.date = formattedDate;
+
     return result;
 };
 

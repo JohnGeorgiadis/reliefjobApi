@@ -66,7 +66,7 @@ const schema = gql`
         bodyHtml: String!
         careerCategories: CareerCategorieData!
         city: CityData
-        country: CountryData!
+        country: CountryData
         date: DateData!
         experience: ExperienceData!
         howToApply: String!

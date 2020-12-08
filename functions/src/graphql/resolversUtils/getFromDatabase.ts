@@ -18,19 +18,20 @@ export const getFromDatabase = async (collectionName: Collections, docId?: strin
 export const jobResult = async (limit: number = queryLimit, cursorId?: string) => {
     const dbRef = admin.firestore().collection(Collections.JOBS);
     const fieldToOrder = 'date.closing';
+    const currentTime = new Date();
 
     if (cursorId) {
         const docRef = dbRef.doc(cursorId);
 
         return docRef.get().then(async (snapshot) => {
-            const startAtSnapshot = dbRef.orderBy(fieldToOrder).startAfter(snapshot);
+            const startAtSnapshot = dbRef.where(fieldToOrder, '>=', currentTime).orderBy(fieldToOrder).startAfter(snapshot);
 
             const collectionData = await startAtSnapshot.limit(limit).get();
 
             return prepareData(collectionData.docs);
         });
     } else {
-        const collectionData = await dbRef.orderBy(fieldToOrder).limit(limit).get();
+        const collectionData = await dbRef.where(fieldToOrder, '>=', currentTime).orderBy(fieldToOrder).limit(limit).get();
 
         return prepareData(collectionData.docs);
     }

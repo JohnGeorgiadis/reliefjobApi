@@ -111,6 +111,9 @@ const schema = gql`
         changed: String!
         closing: String!
         created: String!
+        changedToDate: String!
+        closingToDate: String!
+        createdToDate: String!
     }
 
     type ExperienceData {

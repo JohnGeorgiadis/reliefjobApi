@@ -26,6 +26,7 @@ const schema = gql`
         job(id: ID!): Job!
         categories: [Category!]
         category(id: ID!): Category!
+        cities: [CityData!]
         countries: [Country!]
         country(id: ID!): Country!
         experience: [FilterData!]

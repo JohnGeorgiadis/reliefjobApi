@@ -43,6 +43,9 @@ const resolverFunctions = {
         country: async (_: any, { id }: ResolverIdParam) => {
             return await getFromDatabase(Collections.COUNTRIES, id);
         },
+        cities: async (_: any) => {
+            return await getFromDatabase(Collections.CITIES);
+        },
         experience: async (_: any) => {
             return await getFromDatabase(Collections.EXPERIENCE);
         },

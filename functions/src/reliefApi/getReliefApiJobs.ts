@@ -90,7 +90,7 @@ const normalizeKey = (keyValue: string) => {
     case "how_to_apply":
       return "howToApply";
     case "career_categories":
-      return "careerCategories";
+      return "category";
     case "body-html":
       return "bodyHtml";
     default:

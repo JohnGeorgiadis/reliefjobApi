@@ -65,7 +65,7 @@ const schema = gql`
     type Job {
         body: String!
         bodyHtml: String!
-        careerCategories: CareerCategorieData!
+        category: CategoryData!
         city: CityData
         country: CountryData
         date: DateData!
@@ -85,7 +85,7 @@ const schema = gql`
         keywords: [String]!
     }
 
-    type CareerCategorieData {
+    type CategoryData {
         id: ID!
         name: String!
     }

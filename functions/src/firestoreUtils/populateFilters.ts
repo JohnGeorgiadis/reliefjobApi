@@ -11,12 +11,12 @@ export const populateFilters = () => {
         .get()
         .then((snapshot) => {
             snapshot.forEach(async (job) => {
-                const { experience, careerCategories, type, source } = job.data();
+                const { experience, category, type, source } = job.data();
                 // write experience
                 await addDocToCollection(experience, Collections.EXPERIENCE);
 
                 // write categories
-                await addDocToCollection(careerCategories, Collections.CATEGORIES);
+                await addDocToCollection(category, Collections.CATEGORIES);
 
                 // write themes
                 if (job.data().hasOwnProperty('theme')) {

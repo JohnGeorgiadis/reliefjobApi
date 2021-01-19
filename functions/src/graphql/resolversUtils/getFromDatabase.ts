@@ -77,7 +77,8 @@ export const searchJobsOpen = async (
 
 export const searchJobsSpecific = async (
     condition: { fields: [string]; operators: [WhereFilterOp]; values: [string] },
-    cursorId?: string,
+    limit: number = queryLimit,
+    cursorId?: string
 ) => {
     const dbRef = admin.firestore().collection(Collections.JOBS);
     const fieldToOrder = 'date.closing';
@@ -87,7 +88,7 @@ export const searchJobsSpecific = async (
         const docRef = dbRef.doc(cursorId);
 
         return docRef.get().then(async (snapshot) => {
-            let collectionDataRef = await dbRef.orderBy(fieldToOrder).limit(queryLimit);
+            let collectionDataRef = await dbRef.orderBy(fieldToOrder).limit(limit);
 
             fields.forEach((field: string, index: number) => {
                 collectionDataRef = collectionDataRef.where(field, operators[index], values[index]);
@@ -95,12 +96,12 @@ export const searchJobsSpecific = async (
 
             const startAtSnapshot = collectionDataRef.startAfter(snapshot);
 
-            const collectionData = await startAtSnapshot.limit(queryLimit).get();
+            const collectionData = await startAtSnapshot.limit(limit).get();
 
             return prepareData(collectionData.docs);
         });
     } else {
-        let collectionDataRef = await dbRef.orderBy(fieldToOrder).limit(queryLimit);
+        let collectionDataRef = await dbRef.orderBy(fieldToOrder).limit(limit);
 
         fields.forEach((field: string, index: number) => {
             collectionDataRef = collectionDataRef.where(field, operators[index], values[index]);

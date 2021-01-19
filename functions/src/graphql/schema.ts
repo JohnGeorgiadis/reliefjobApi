@@ -14,6 +14,7 @@ const schema = gql`
             """
             ID of specific job to start pagination
             """
+            limit: Int
             cursorId: String
         ): [Job!]
         jobs(

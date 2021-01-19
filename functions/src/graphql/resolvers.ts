@@ -15,6 +15,7 @@ type ResolverSearchOpenParams = {
 type ResolverSearchSpecificParams = {
     condition: { fields: [string]; operators: [WhereFilterOp]; values: [string] };
     cursorId?: string;
+    limit?: number;
 };
 
 const resolverFunctions = {
@@ -22,8 +23,8 @@ const resolverFunctions = {
         jobsSearchOpen: async (_: any, { condition, cursorId }: ResolverSearchOpenParams) => {
             return await searchJobsOpen(condition, cursorId);
         },
-        jobsSearchSpecific: async (_: any, { condition, cursorId }: ResolverSearchSpecificParams) => {
-            return await searchJobsSpecific(condition, cursorId);
+        jobsSearchSpecific: async (_: any, { condition, limit, cursorId }: ResolverSearchSpecificParams) => {
+            return await searchJobsSpecific(condition, limit, cursorId);
         },
         jobs: async (_: any, { limit, cursorId }: ResolverJobParams) => {
             return await jobResult(limit, cursorId);

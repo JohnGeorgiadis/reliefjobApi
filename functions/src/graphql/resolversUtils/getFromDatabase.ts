@@ -83,6 +83,7 @@ export const searchJobsSpecific = async (
     const dbRef = admin.firestore().collection(Collections.JOBS);
     const fieldToOrder = 'date.closing';
     const { fields, operators, values } = condition;
+    const currentTime = new Date();
 
     if (cursorId) {
         const docRef = dbRef.doc(cursorId);
@@ -104,7 +105,10 @@ export const searchJobsSpecific = async (
         let collectionDataRef = await dbRef.orderBy(fieldToOrder).limit(limit);
 
         fields.forEach((field: string, index: number) => {
+            // Filter out the data with incoming conditions
             collectionDataRef = collectionDataRef.where(field, operators[index], values[index]);
+            // Order the filtered data with the latest (current date) results
+            collectionDataRef = collectionDataRef.where(fieldToOrder, '>=', currentTime);
         });
 
         const collectionData = await collectionDataRef.get();

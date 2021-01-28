@@ -4,26 +4,27 @@ const schema = gql`
     type Query {
         jobsSearchOpen(
             condition: ConditionData
+            limit: Int
             """
             ID of specific job to start pagination
             """
             cursorId: String
-        ): [Job!]
+        ): JobSearchResults!
         jobsSearchSpecific(
             condition: ConditionDataSpecific
+            limit: Int
             """
             ID of specific job to start pagination
             """
-            limit: Int
             cursorId: String
-        ): [Job!]
+        ): JobSearchResults!
         jobs(
             limit: Int
             """
             ID of specific job to start pagination
             """
             cursorId: String
-        ): [Job!]
+        ): JobSearchResults!
         job(id: ID!): Job!
         categories: [Category!]
         category(id: ID!): Category!
@@ -85,7 +86,12 @@ const schema = gql`
         urlAlias: String!
         keywords: [String]!
     }
-
+    
+    type JobSearchResults {
+        jobs: [Job!]
+        hasMoreJobs: Boolean!
+    }
+    
     type CategoryData {
         id: ID!
         name: String!

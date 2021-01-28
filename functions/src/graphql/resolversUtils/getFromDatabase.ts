@@ -25,15 +25,14 @@ export const jobResult = async (limit: number = queryLimit, cursorId?: string) =
 
         return docRef.get().then(async (snapshot) => {
             const startAtSnapshot = dbRef.where(fieldToOrder, '>=', currentTime).orderBy(fieldToOrder).startAfter(snapshot);
-
             const collectionData = await startAtSnapshot.limit(limit).get();
 
-            return prepareData(collectionData.docs);
+            return prepareData(collectionData.docs, limit);
         });
     } else {
         const collectionData = await dbRef.where(fieldToOrder, '>=', currentTime).orderBy(fieldToOrder).limit(limit).get();
 
-        return prepareData(collectionData.docs);
+        return prepareData(collectionData.docs, limit);
     }
 };
 
@@ -45,6 +44,7 @@ export const searchJobsOpen = async (
         idValue?: number;
         arrayValue?: string[];
     },
+    limit: number = queryLimit,
     cursorId?: string,
 ) => {
     const dbRef = admin.firestore().collection(Collections.JOBS);
@@ -83,6 +83,7 @@ export const searchJobsSpecific = async (
     const dbRef = admin.firestore().collection(Collections.JOBS);
     const fieldToOrder = 'date.closing';
     const { fields, operators, values } = condition;
+    const currentTime = new Date();
 
     if (cursorId) {
         const docRef = dbRef.doc(cursorId);
@@ -98,20 +99,26 @@ export const searchJobsSpecific = async (
 
             const collectionData = await startAtSnapshot.limit(limit).get();
 
-            return prepareData(collectionData.docs);
+            return prepareData(collectionData.docs, limit);
         });
     } else {
         let collectionDataRef = await dbRef.orderBy(fieldToOrder).limit(limit);
 
         fields.forEach((field: string, index: number) => {
+            // Filter out the data with incoming conditions
             collectionDataRef = collectionDataRef.where(field, operators[index], values[index]);
+            // Order the filtered data with the latest (current date) results
+            collectionDataRef = collectionDataRef.where(fieldToOrder, '>=', currentTime);
         });
 
         const collectionData = await collectionDataRef.get();
-        return prepareData(collectionData.docs);
+        return prepareData(collectionData.docs, limit);
     }
 };
 
-const prepareData = (collectionData: any) => {
-    return collectionData.map((collection: any) => collection.data());
+const prepareData = (collectionData: any, limit: number = queryLimit) => {
+    const jobs =  collectionData.map((collection: any) => collection.data());
+    const hasMoreJobs = jobs.length >= limit;
+
+    return { jobs, hasMoreJobs }
 };

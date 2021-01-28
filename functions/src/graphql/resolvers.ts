@@ -10,18 +10,19 @@ type ResolverSearchOpenParams = {
         value?: string;
         idValue?: number;
     };
+    limit?: number;
     cursorId?: string;
 };
 type ResolverSearchSpecificParams = {
     condition: { fields: [string]; operators: [WhereFilterOp]; values: [string] };
-    cursorId?: string;
     limit?: number;
+    cursorId?: string;
 };
 
 const resolverFunctions = {
     Query: {
-        jobsSearchOpen: async (_: any, { condition, cursorId }: ResolverSearchOpenParams) => {
-            return await searchJobsOpen(condition, cursorId);
+        jobsSearchOpen: async (_: any, { condition, limit, cursorId }: ResolverSearchOpenParams) => {
+            return await searchJobsOpen(condition, limit, cursorId);
         },
         jobsSearchSpecific: async (_: any, { condition, limit, cursorId }: ResolverSearchSpecificParams) => {
             return await searchJobsSpecific(condition, limit, cursorId);

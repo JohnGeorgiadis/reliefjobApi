@@ -27,7 +27,7 @@ const resolverFunctions = {
         jobsSearchSpecific: async (_: any, { condition, limit, cursorId }: ResolverSearchSpecificParams) => {
             return await searchJobsSpecific(condition, limit, cursorId);
         },
-        jobs: async (_: any, { limit, cursorId }: ResolverJobParams) => {
+        allJobs: async (_: any, { limit, cursorId }: ResolverJobParams) => {
             return await jobResult(limit, cursorId);
         },
         job: async (_: any, { id }: ResolverIdParam) => {

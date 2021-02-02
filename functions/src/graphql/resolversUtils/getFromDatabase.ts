@@ -11,7 +11,7 @@ export const getFromDatabase = async (collectionName: Collections, docId?: strin
     } else {
         const collectionData = await admin.firestore().collection(collectionName).get();
 
-        return prepareData(collectionData.docs);
+        return collectionData.docs.map((collection: any) => collection.data());
     }
 };
 
@@ -27,12 +27,12 @@ export const jobResult = async (limit: number = queryLimit, cursorId?: string) =
             const startAtSnapshot = dbRef.where(fieldToOrder, '>=', currentTime).orderBy(fieldToOrder).startAfter(snapshot);
             const collectionData = await startAtSnapshot.limit(limit).get();
 
-            return prepareData(collectionData.docs, limit);
+            return prepareJobData(collectionData.docs, limit);
         });
     } else {
         const collectionData = await dbRef.where(fieldToOrder, '>=', currentTime).orderBy(fieldToOrder).limit(limit).get();
 
-        return prepareData(collectionData.docs, limit);
+        return prepareJobData(collectionData.docs, limit);
     }
 };
 
@@ -62,7 +62,7 @@ export const searchJobsOpen = async (
 
             const collectionData = await startAtSnapshot.limit(queryLimit).get();
 
-            return prepareData(collectionData.docs);
+            return prepareJobData(collectionData.docs);
         });
     } else {
         const collectionData = await dbRef
@@ -71,7 +71,7 @@ export const searchJobsOpen = async (
             .where(field, operator, value || idValue || arrayValue)
             .get();
 
-        return prepareData(collectionData.docs);
+        return prepareJobData(collectionData.docs);
     }
 };
 
@@ -99,7 +99,7 @@ export const searchJobsSpecific = async (
 
             const collectionData = await startAtSnapshot.limit(limit).get();
 
-            return prepareData(collectionData.docs, limit);
+            return prepareJobData(collectionData.docs, limit);
         });
     } else {
         let collectionDataRef = await dbRef.orderBy(fieldToOrder).limit(limit);
@@ -112,12 +112,12 @@ export const searchJobsSpecific = async (
         });
 
         const collectionData = await collectionDataRef.get();
-        return prepareData(collectionData.docs, limit);
+        return prepareJobData(collectionData.docs, limit);
     }
 };
 
-const prepareData = (collectionData: any, limit: number = queryLimit) => {
-    const jobs =  collectionData.map((collection: any) => collection.data());
+const prepareJobData = (collectionData: any, limit: number = queryLimit) => {
+    const jobs = collectionData.map((collection: any) => collection.data());
     const hasMoreJobs = jobs.length >= limit;
 
     return { jobs, hasMoreJobs }
